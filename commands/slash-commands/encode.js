@@ -6,24 +6,20 @@ module.exports = {
         .setName('encode')
         .setDescription('Encode a message using RSA.')
         .addStringOption(option =>
-            option.setName('publickey_n')
-                .setDescription('The "n" component of the RSA public key for encoding.')
+            option.setName('publickey')
+                .setDescription('The entire public key in JWK format for encoding.')
                 .setRequired(true))
         .addStringOption(option =>
             option.setName('message')
                 .setDescription('The message you want to encode.')
                 .setRequired(true)),
     async execute(interaction) {
-        const publicKeyN = interaction.options.getString('publickey_n');
+        const publicKeyJWK = JSON.parse(interaction.options.getString('publickey'));
         const message = interaction.options.getString('message');
 
-        // Construct the public key in PEM format using n and a fixed public exponent e
+        // Construct the public key in PEM format using the provided JWK
         const publicKeyPEM = crypto.createPublicKey({
-            key: {
-                kty: 'RSA',
-                n: Buffer.from(publicKeyN, 'hex'),
-                e: Buffer.from('010001', 'hex'), // This is 65537 in hex, a common choice for e
-            },
+            key: publicKeyJWK,
             format: 'jwk',
             type: 'pkcs1'
         }).export({
@@ -36,7 +32,7 @@ module.exports = {
             await interaction.reply(`Encoded Message:\n\`\`\`${encryptedMessage.toString('base64')}\`\`\``);
         } catch (error) {
             await interaction.reply({
-                content: 'Error encoding the message. Please ensure you provided a valid "n" component of the RSA public key.',
+                content: 'Error encoding the message. Please ensure you provided a valid public key in JWK format.',
                 ephemeral: true
             });
         }

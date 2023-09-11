@@ -14,23 +14,22 @@ module.exports = {
             },
             privateKeyEncoding: {
                 type: 'pkcs1',
-                format: 'components'
+                format: 'pem'
             }
         });
 
-        // Extract n (modulus) from the public key
-        const n = crypto.createPublicKey(publicKey).export({
-            type: 'pkcs1',
-            format: 'components'
-        }).n;
+        const publicKeyJWK = crypto.createPublicKey(publicKey).export({
+            format: 'jwk'
+        });
 
-        // Extract p and q from the private key
-        const { p, q } = privateKey;
+        const privateKeyJWK = crypto.createPrivateKey(privateKey).export({
+            format: 'jwk'
+        });
 
-        await interaction.reply(`Public Key (n):\n\`\`\`${n.toString('hex')}\`\`\``);
+        await interaction.reply(`Public Key:\n\`\`\`${JSON.stringify(publicKeyJWK, null, 2)}\`\`\``);
 
         await interaction.followUp({
-            content: `Private Key components:\np: \`\`\`${p.toString('hex')}\`\`\`\nq: \`\`\`${q.toString('hex')}\`\`\``,
+            content: `Private Key:\n\`\`\`${JSON.stringify(privateKeyJWK, null, 2)}\`\`\``,
             ephemeral: true
         });
     },
