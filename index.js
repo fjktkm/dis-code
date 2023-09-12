@@ -46,6 +46,6 @@ for (const file of eventFiles) {
 	}
 }
 
-// const token = process.env.DISCORD_TOKEN;
-const token = require('./config.json').token;
+const token = process.env.DISCORD_TOKEN;
+// const token = require('./config.json').token;
 client.login(token);
