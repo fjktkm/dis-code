@@ -26,10 +26,10 @@ module.exports = {
             format: 'jwk'
         });
 
-        await interaction.reply(`Public Key:\n\`\`\`${JSON.stringify(publicKeyJWK, null, 2)}\`\`\``);
+        await interaction.reply(`Public Key:\n\`\`\`json\n${JSON.stringify(publicKeyJWK, null, 2)}\`\`\``);
 
         await interaction.followUp({
-            content: `Private Key:\n\`\`\`${JSON.stringify(privateKeyJWK, null, 2)}\`\`\``,
+            content: `Private Key:\n\`\`\`json\n${JSON.stringify(privateKeyJWK, null, 2)}\`\`\``,
             ephemeral: true
         });
     },
