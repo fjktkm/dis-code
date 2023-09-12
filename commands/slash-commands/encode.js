@@ -30,6 +30,10 @@ module.exports = {
         try {
             const encryptedMessage = crypto.publicEncrypt(publicKeyPEM, Buffer.from(message));
             await interaction.reply(`Encoded Message:\n\`\`\`${encryptedMessage.toString('base64')}\`\`\``);
+            await interaction.followUp({
+                content: `Message:\n\`\`\`${message}\`\`\``,
+                ephemeral: true
+            });
         } catch (error) {
             await interaction.reply({
                 content: 'Error encoding the message. Please ensure you provided a valid public key in JWK format.',
